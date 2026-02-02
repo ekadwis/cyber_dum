@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cyber Chat</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+  <style>
+    body {
+      box-sizing: border-box;
+    }
+    
+    * {
+      font-family: 'Inter', sans-serif;
+    }
+    
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    
+    /* Chat background pattern */
+    .chat-bg {
+      background-color: #0a0a0f;
+      background-image: 
+        radial-gradient(circle at 20% 50%, rgba(0, 255, 200, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(0, 255, 200, 0.03) 0%, transparent 50%);
+    }
+    
+    /* Bubble animations */
+    @keyframes slideInLeft {
+      from {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+    
+    @keyframes slideInRight {
+      from {
+        opacity: 0;
+        transform: translateX(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+    
+    .bubble-left {
+      animation: slideInLeft 0.3s ease-out;
+    }
+    
+    .bubble-right {
+      animation: slideInRight 0.3s ease-out;
+    }
+    
+    /* Subtle glow on my messages */
+    .bubble-glow {
+      box-shadow: 0 0 15px rgba(0, 255, 200, 0.15);
+    }
+    
+    /* Scroll behavior */
+    .chat-container {
+      scroll-behavior: smooth;
+    }
+    
+    .chat-container::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    .chat-container::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.2);
+    }
+    
+    .chat-container::-webkit-scrollbar-thumb {
+      background: rgba(0, 255, 200, 0.2);
+      border-radius: 3px;
+    }
+    
+    .chat-container::-webkit-scrollbar-thumb:hover {
+      background: rgba(0, 255, 200, 0.3);
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full bg-[#0a0a0f] text-white overflow-hidden">
+  <div class="h-full w-full flex flex-col"><!-- Chat Header -->
+   <header class="bg-[#16161f] border-b border-[#00ffc8]/20 px-4 py-3 flex items-center gap-3 flex-shrink-0"><a href="#back" class="w-9 h-9 rounded-lg bg-[#00ffc8]/10 border border-[#00ffc8]/20 flex items-center justify-center hover:bg-[#00ffc8]/20 transition-colors active:scale-95">
+     <svg class="w-5 h-5 text-[#00ffc8]" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+     </svg></a>
+    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-[#00ffc8]/30 to-[#00ffc8]/10 border border-[#00ffc8]/40 flex items-center justify-center flex-shrink-0">
+     <svg class="w-5 h-5 text-[#00ffc8]" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+     </svg>
+    </div>
+    <div class="flex-1 min-w-0">
+     <h1 id="target-name" class="text-white font-semibold text-base truncate">Target Alpha</h1>
+     <p id="log-date" class="text-[#00ffc8]/60 text-xs mono">Log date: 2026-01-12</p>
+    </div><button class="w-9 h-9 rounded-lg bg-[#00ffc8]/10 border border-[#00ffc8]/20 flex items-center justify-center hover:bg-[#00ffc8]/20 transition-colors flex-shrink-0">
+     <svg class="w-5 h-5 text-[#00ffc8]" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+     </svg></button>
+   </header><!-- Chat Messages Container -->
+   <div class="flex-1 overflow-y-auto chat-container chat-bg px-4 py-4">
+    <div class="max-w-4xl mx-auto space-y-3"><!-- Date Divider -->
+     <div class="flex justify-center my-6">
+      <div class="px-4 py-1.5 bg-[#16161f]/80 backdrop-blur-sm border border-[#00ffc8]/20 rounded-full"><span id="date-divider" class="text-[#00ffc8]/70 text-xs font-medium mono tracking-wide">TODAY</span>
+      </div>
+     </div><!-- Message from Target -->
+     <div class="flex justify-start bubble-left">
+      <div class="max-w-[75%]">
+       <div class="bg-[#1a1a24] border border-[#00ffc8]/10 rounded-2xl rounded-tl-sm px-4 py-2.5 shadow-lg">
+        <p class="text-white text-sm leading-relaxed mb-1">Hey, can you check the latest updates on the system?</p><span class="text-[#00ffc8]/40 text-xs mono">19:02</span>
+       </div>
+      </div>
+     </div><!-- Message from Me -->
+     <div class="flex justify-end bubble-right">
+      <div class="max-w-[75%]">
+       <div class="bg-[#00ffc8]/15 border border-[#00ffc8]/30 rounded-2xl rounded-tr-sm px-4 py-2.5 shadow-lg bubble-glow">
+        <p class="text-white text-sm leading-relaxed mb-1">Sure, give me a moment. Running diagnostics now.</p>
+        <div class="flex items-center justify-end gap-1.5"><span class="text-[#00ffc8]/60 text-xs mono">19:03</span>
+         <svg class="w-4 h-4 text-[#00ffc8]" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+         </svg>
+        </div>
+       </div>
+      </div>
+     </div><!-- Message from Target -->
+     <div class="flex justify-start bubble-left">
+      <div class="max-w-[75%]">
+       <div class="bg-[#1a1a24] border border-[#00ffc8]/10 rounded-2xl rounded-tl-sm px-4 py-2.5 shadow-lg">
+        <p class="text-white text-sm leading-relaxed mb-1">Thanks. Also, did you get the report I sent earlier?</p><span class="text-[#00ffc8]/40 text-xs mono">19:05</span>
+       </div>
+      </div>
+     </div><!-- Message from Me -->
+     <div class="flex justify-end bubble-right">
+      <div class="max-w-[75%]">
+       <div class="bg-[#00ffc8]/15 border border-[#00ffc8]/30 rounded-2xl rounded-tr-sm px-4 py-2.5 shadow-lg bubble-glow">
+        <p class="text-white text-sm leading-relaxed mb-1">Yes, I reviewed it. Everything looks good on my end.</p>
+        <div class="flex items-center justify-end gap-1.5"><span class="text-[#00ffc8]/60 text-xs mono">19:06</span>
+         <svg class="w-4 h-4 text-[#00ffc8]" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+         </svg>
+        </div>
+       </div>
+      </div>
+     </div><!-- Message from Target -->
+     <div class="flex justify-start bubble-left">
+      <div class="max-w-[75%]">
+       <div class="bg-[#1a1a24] border border-[#00ffc8]/10 rounded-2xl rounded-tl-sm px-4 py-2.5 shadow-lg">
+        <p class="text-white text-sm leading-relaxed mb-1">Perfect. Let me know if you need anything else.</p><span class="text-[#00ffc8]/40 text-xs mono">19:08</span>
+       </div>
+      </div>
+     </div><!-- Message from Me -->
+     <div class="flex justify-end bubble-right">
+      <div class="max-w-[75%]">
+       <div class="bg-[#00ffc8]/15 border border-[#00ffc8]/30 rounded-2xl rounded-tr-sm px-4 py-2.5 shadow-lg bubble-glow">
+        <p class="text-white text-sm leading-relaxed mb-1">Will do. Status: All systems operational ✓</p>
+        <div class="flex items-center justify-end gap-1.5"><span class="text-[#00ffc8]/60 text-xs mono">19:09</span>
+         <svg class="w-4 h-4 text-[#00ffc8]" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+         </svg>
+        </div>
+       </div>
+      </div>
+     </div><!-- Message from Target -->
+     <div class="flex justify-start bubble-left">
+      <div class="max-w-[75%]">
+       <div class="bg-[#1a1a24] border border-[#00ffc8]/10 rounded-2xl rounded-tl-sm px-4 py-2.5 shadow-lg">
+        <p class="text-white text-sm leading-relaxed mb-1">Great work! 👍</p><span class="text-[#00ffc8]/40 text-xs mono">19:10</span>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div><!-- Input Bar (Dummy) -->
+   <div class="bg-[#16161f] border-t border-[#00ffc8]/20 px-4 py-3 flex items-center gap-3 flex-shrink-0"><label for="message-input" class="sr-only">Type a message</label> <input type="text" id="message-input" placeholder="Type a message…" class="flex-1 bg-[#0a0a0f]/80 border border-[#00ffc8]/20 rounded-full px-5 py-2.5 text-white placeholder-[#00ffc8]/30 focus:outline-none focus:border-[#00ffc8]/40 transition-colors text-sm"> <button class="w-11 h-11 rounded-full bg-gradient-to-br from-[#00ffc8] to-[#00d4aa] flex items-center justify-center hover:scale-105 active:scale-95 transition-transform shadow-lg">
+     <svg class="w-5 h-5 text-[#0a0a0f]" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+     </svg></button>
+   </div>
+  </div>
+  <script>
+    const defaultConfig = {
+      target_name: 'Target Alpha',
+      log_date: 'Log date: 2026-01-12',
+      date_divider: 'TODAY',
+      input_placeholder: 'Type a message…',
+      background_color: '#0a0a0f',
+      header_color: '#16161f',
+      accent_color: '#00ffc8',
+      text_color: '#ffffff',
+      font_family: 'Inter',
+      font_size: 16
+    };
+
+    async function onConfigChange(config) {
+      const targetName = document.getElementById('target-name');
+      const logDate = document.getElementById('log-date');
+      const dateDivider = document.getElementById('date-divider');
+      const messageInput = document.getElementById('message-input');
+
+      if (targetName) targetName.textContent = config.target_name || defaultConfig.target_name;
+      if (logDate) logDate.textContent = config.log_date || defaultConfig.log_date;
+      if (dateDivider) dateDivider.textContent = config.date_divider || defaultConfig.date_divider;
+      if (messageInput) messageInput.placeholder = config.input_placeholder || defaultConfig.input_placeholder;
+
+      // Apply font
+      const customFont = config.font_family || defaultConfig.font_family;
+      document.body.style.fontFamily = `${customFont}, sans-serif`;
+      
+      // Apply font size scaling
+      const baseSize = config.font_size || defaultConfig.font_size;
+      if (targetName) targetName.style.fontSize = `${baseSize}px`;
+      if (logDate) logDate.style.fontSize = `${baseSize * 0.75}px`;
+      if (dateDivider) dateDivider.style.fontSize = `${baseSize * 0.75}px`;
+      if (messageInput) messageInput.style.fontSize = `${baseSize * 0.875}px`;
+    }
+
+    function mapToCapabilities(config) {
+      return {
+        recolorables: [
+          {
+            get: () => config.background_color || defaultConfig.background_color,
+            set: (value) => {
+              config.background_color = value;
+              window.elementSdk.setConfig({ background_color: value });
+            }
+          },
+          {
+            get: () => config.header_color || defaultConfig.header_color,
+            set: (value) => {
+              config.header_color = value;
+              window.elementSdk.setConfig({ header_color: value });
+            }
+          },
+          {
+            get: () => config.text_color || defaultConfig.text_color,
+            set: (value) => {
+              config.text_color = value;
+              window.elementSdk.setConfig({ text_color: value });
+            }
+          },
+          {
+            get: () => config.accent_color || defaultConfig.accent_color,
+            set: (value) => {
+              config.accent_color = value;
+              window.elementSdk.setConfig({ accent_color: value });
+            }
+          }
+        ],
+        borderables: [],
+        fontEditable: {
+          get: () => config.font_family || defaultConfig.font_family,
+          set: (value) => {
+            config.font_family = value;
+            window.elementSdk.setConfig({ font_family: value });
+          }
+        },
+        fontSizeable: {
+          get: () => config.font_size || defaultConfig.font_size,
+          set: (value) => {
+            config.font_size = value;
+            window.elementSdk.setConfig({ font_size: value });
+          }
+        }
+      };
+    }
+
+    function mapToEditPanelValues(config) {
+      return new Map([
+        ['target_name', config.target_name || defaultConfig.target_name],
+        ['log_date', config.log_date || defaultConfig.log_date],
+        ['date_divider', config.date_divider || defaultConfig.date_divider],
+        ['input_placeholder', config.input_placeholder || defaultConfig.input_placeholder]
+      ]);
+    }
+
+    // Initialize SDK
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange,
+        mapToCapabilities,
+        mapToEditPanelValues
+      });
+    }
+    
+    // Auto scroll to bottom on load
+    window.addEventListener('load', () => {
+      const chatContainer = document.querySelector('.chat-container');
+      if (chatContainer) {
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+      }
+    });
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c765eb0744eba3d',t:'MTc3MDAwMDUwOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

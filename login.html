@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cyber Terminal Login</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&amp;family=Orbitron:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <style>
+    body {
+      box-sizing: border-box;
+    }
+    
+    * {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    
+    .orbitron {
+      font-family: 'Orbitron', sans-serif;
+    }
+    
+    /* Grid background */
+    .cyber-grid {
+      background-image: 
+        linear-gradient(rgba(0, 255, 170, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 170, 0.03) 1px, transparent 1px);
+      background-size: 30px 30px;
+    }
+    
+    /* Scanline effect */
+    .scanlines::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 0, 0, 0.1) 2px,
+        rgba(0, 0, 0, 0.1) 4px
+      );
+      pointer-events: none;
+      z-index: 10;
+    }
+    
+    /* Glow effects */
+    .neon-glow {
+      box-shadow: 
+        0 0 5px rgba(0, 255, 170, 0.3),
+        0 0 20px rgba(0, 255, 170, 0.1),
+        inset 0 0 20px rgba(0, 255, 170, 0.05);
+    }
+    
+    .text-glow {
+      text-shadow: 0 0 10px rgba(0, 255, 170, 0.5), 0 0 20px rgba(0, 255, 170, 0.3);
+    }
+    
+    .input-glow:focus {
+      box-shadow: 
+        0 0 0 2px rgba(0, 255, 170, 0.3),
+        0 0 15px rgba(0, 255, 170, 0.2),
+        inset 0 0 10px rgba(0, 255, 170, 0.05);
+    }
+    
+    .btn-glow {
+      box-shadow: 
+        0 0 10px rgba(0, 255, 170, 0.4),
+        0 0 30px rgba(0, 255, 170, 0.2);
+    }
+    
+    .btn-glow:hover {
+      box-shadow: 
+        0 0 15px rgba(0, 255, 170, 0.6),
+        0 0 40px rgba(0, 255, 170, 0.3),
+        0 0 60px rgba(0, 255, 170, 0.1);
+    }
+    
+    /* Animated border */
+    .animated-border {
+      position: relative;
+    }
+    
+    .animated-border::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(45deg, #00ffaa, #00d4ff, #00ffaa, #00d4ff);
+      background-size: 400% 400%;
+      border-radius: 18px;
+      z-index: -1;
+      animation: borderGlow 8s ease infinite;
+      opacity: 0.6;
+    }
+    
+    @keyframes borderGlow {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+    
+    /* Pulse animation */
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    
+    .pulse {
+      animation: pulse 2s ease-in-out infinite;
+    }
+    
+    /* Typing cursor */
+    @keyframes blink {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0; }
+    }
+    
+    .cursor::after {
+      content: '█';
+      animation: blink 1s step-end infinite;
+      margin-left: 2px;
+      color: #00ffaa;
+    }
+    
+    /* Float animation */
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+    
+    .float {
+      animation: float 3s ease-in-out infinite;
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full bg-[#0a0a0f] cyber-grid overflow-auto"><!-- Ambient glow effects -->
+  <div class="fixed top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-[#00ffaa] opacity-5 blur-3xl rounded-full pointer-events-none"></div>
+  <div class="fixed bottom-0 right-0 w-64 h-64 bg-[#00d4ff] opacity-5 blur-3xl rounded-full pointer-events-none"></div><!-- Main container -->
+  <div class="min-h-full w-full flex items-center justify-center p-4 relative"><!-- Login Card -->
+   <div class="w-full max-w-sm animated-border">
+    <div class="bg-[#12121a] rounded-2xl p-6 sm:p-8 neon-glow relative scanlines overflow-hidden"><!-- Corner decorations -->
+     <div class="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-[#00ffaa] opacity-50 rounded-tl-2xl"></div>
+     <div class="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-[#00ffaa] opacity-50 rounded-tr-2xl"></div>
+     <div class="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-[#00ffaa] opacity-50 rounded-bl-2xl"></div>
+     <div class="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-[#00ffaa] opacity-50 rounded-br-2xl"></div><!-- Terminal Icon -->
+     <div class="flex justify-center mb-6 float">
+      <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-[#00ffaa]/20 to-[#00d4ff]/20 border border-[#00ffaa]/30 flex items-center justify-center">
+       <svg class="w-8 h-8 text-[#00ffaa]" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+       </svg>
+      </div>
+     </div><!-- Header -->
+     <div class="text-center mb-8">
+      <p id="subtitle" class="text-[#00ffaa]/70 text-xs tracking-[0.3em] mb-2 uppercase">SECURE ACCESS</p>
+      <h1 id="title" class="orbitron text-2xl sm:text-3xl font-bold text-white text-glow tracking-wider">LOGIN PORTAL</h1>
+      <div class="flex items-center justify-center gap-2 mt-3"><span class="w-2 h-2 rounded-full bg-[#00ffaa] pulse"></span> <span class="text-[#00ffaa]/50 text-xs tracking-widest">RF Hacked Forum</span>
+      </div>
+     </div><!-- Form -->
+     <form id="login-form" class="space-y-5" onsubmit="event.preventDefault();"><!-- Username Input -->
+      <div class="relative group"><label for="username" class="block text-[#00ffaa]/60 text-xs mb-2 tracking-wider uppercase">Username</label>
+       <div class="relative">
+        <div class="absolute left-4 top-1/2 -translate-y-1/2 text-[#00ffaa]/40 group-focus-within:text-[#00ffaa] transition-colors">
+         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+         </svg>
+        </div><input type="text" id="username" name="username" placeholder="enter_username" class="w-full bg-[#0a0a0f]/80 border border-[#00ffaa]/20 rounded-lg py-3.5 pl-12 pr-4 text-white placeholder-[#00ffaa]/20 focus:outline-none focus:border-[#00ffaa]/50 input-glow transition-all duration-300">
+       </div>
+      </div><!-- Password Input -->
+      <div class="relative group"><label for="password" class="block text-[#00ffaa]/60 text-xs mb-2 tracking-wider uppercase">Password</label>
+       <div class="relative">
+        <div class="absolute left-4 top-1/2 -translate-y-1/2 text-[#00ffaa]/40 group-focus-within:text-[#00ffaa] transition-colors">
+         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+         </svg>
+        </div><input type="password" id="password" name="password" placeholder="••••••••••" class="w-full bg-[#0a0a0f]/80 border border-[#00ffaa]/20 rounded-lg py-3.5 pl-12 pr-4 text-white placeholder-[#00ffaa]/30 focus:outline-none focus:border-[#00ffaa]/50 input-glow transition-all duration-300">
+       </div>
+      </div><!-- Submit Button (Dummy - Links to Home) --> <a href="index.html" class="block mt-8"> <button type="button" id="submit-btn" class="w-full bg-gradient-to-r from-[#00ffaa] to-[#00d4ff] text-[#0a0a0f] font-bold py-4 rounded-lg orbitron tracking-wider text-sm uppercase btn-glow hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 relative overflow-hidden group"> <span class="relative z-10" id="btn-text">ENTER SYSTEM</span>
+        <div class="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-500 skew-x-12"></div></button> </a>
+     </form><!-- Demo Mode Disclaimer -->
+     <div class="mt-6 text-center">
+      <p id="disclaimer" class="text-[#00ffaa]/40 text-xs tracking-wider">carefull, we always beside you</p>
+      <div class="flex items-center justify-center gap-1 mt-2"><span class="w-1 h-1 rounded-full bg-[#00ffaa]/30"></span> <span class="w-1 h-1 rounded-full bg-[#00ffaa]/30"></span> <span class="w-1 h-1 rounded-full bg-[#00ffaa]/30"></span>
+      </div>
+     </div><!-- Decorative terminal text -->
+     <div class="mt-6 pt-4 border-t border-[#00ffaa]/10">
+      <p class="text-[#00ffaa]/20 text-[10px] font-mono text-center cursor">initializing_secure_connection...</p>
+     </div>
+    </div>
+   </div>
+  </div>
+  <script>
+    const defaultConfig = {
+      portal_title: 'LOGIN PORTAL',
+      subtitle_text: 'SECURE ACCESS',
+      button_text: 'ENTER SYSTEM',
+      disclaimer_text: 'demo mode • no real access',
+      background_color: '#0a0a0f',
+      accent_color: '#00ffaa',
+      card_color: '#12121a',
+      text_color: '#ffffff',
+      secondary_color: '#00d4ff',
+      font_family: 'JetBrains Mono',
+      font_size: 16
+    };
+
+    async function onConfigChange(config) {
+      const title = document.getElementById('title');
+      const subtitle = document.getElementById('subtitle');
+      const btnText = document.getElementById('btn-text');
+      const disclaimer = document.getElementById('disclaimer');
+
+      if (title) title.textContent = config.portal_title || defaultConfig.portal_title;
+      if (subtitle) subtitle.textContent = config.subtitle_text || defaultConfig.subtitle_text;
+      if (btnText) btnText.textContent = config.button_text || defaultConfig.button_text;
+      if (disclaimer) disclaimer.textContent = config.disclaimer_text || defaultConfig.disclaimer_text;
+
+      // Apply font
+      const customFont = config.font_family || defaultConfig.font_family;
+      document.body.style.fontFamily = `${customFont}, monospace`;
+      
+      // Apply font size scaling
+      const baseSize = config.font_size || defaultConfig.font_size;
+      if (title) title.style.fontSize = `${baseSize * 1.75}px`;
+      if (subtitle) subtitle.style.fontSize = `${baseSize * 0.75}px`;
+      if (disclaimer) disclaimer.style.fontSize = `${baseSize * 0.75}px`;
+    }
+
+    function mapToCapabilities(config) {
+      return {
+        recolorables: [
+          {
+            get: () => config.background_color || defaultConfig.background_color,
+            set: (value) => {
+              config.background_color = value;
+              window.elementSdk.setConfig({ background_color: value });
+            }
+          },
+          {
+            get: () => config.card_color || defaultConfig.card_color,
+            set: (value) => {
+              config.card_color = value;
+              window.elementSdk.setConfig({ card_color: value });
+            }
+          },
+          {
+            get: () => config.text_color || defaultConfig.text_color,
+            set: (value) => {
+              config.text_color = value;
+              window.elementSdk.setConfig({ text_color: value });
+            }
+          },
+          {
+            get: () => config.accent_color || defaultConfig.accent_color,
+            set: (value) => {
+              config.accent_color = value;
+              window.elementSdk.setConfig({ accent_color: value });
+            }
+          },
+          {
+            get: () => config.secondary_color || defaultConfig.secondary_color,
+            set: (value) => {
+              config.secondary_color = value;
+              window.elementSdk.setConfig({ secondary_color: value });
+            }
+          }
+        ],
+        borderables: [],
+        fontEditable: {
+          get: () => config.font_family || defaultConfig.font_family,
+          set: (value) => {
+            config.font_family = value;
+            window.elementSdk.setConfig({ font_family: value });
+          }
+        },
+        fontSizeable: {
+          get: () => config.font_size || defaultConfig.font_size,
+          set: (value) => {
+            config.font_size = value;
+            window.elementSdk.setConfig({ font_size: value });
+          }
+        }
+      };
+    }
+
+    function mapToEditPanelValues(config) {
+      return new Map([
+        ['portal_title', config.portal_title || defaultConfig.portal_title],
+        ['subtitle_text', config.subtitle_text || defaultConfig.subtitle_text],
+        ['button_text', config.button_text || defaultConfig.button_text],
+        ['disclaimer_text', config.disclaimer_text || defaultConfig.disclaimer_text]
+      ]);
+    }
+
+    // Initialize SDK
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange,
+        mapToCapabilities,
+        mapToEditPanelValues
+      });
+    }
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c76542064ac6d1e',t:'MTc3MDAwMDA3Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
